@@ -31,17 +31,20 @@ Dhcp6:
       data: '0xf0'
     - name: bootfile-param
       data: root=/dev/sda2, quiet, splash
-  subnet6: [ {
-    id: 1,
-    subnet: "2020:abcd::/32",
-    pools: [{pool: "2020:abcd::1-2020:abcd::ffff"}],
-    rapid-commit: true,
-    interface: wfan0,
-    } ]
-
+  subnet6:
+    - id: 1
+      subnet: "2020:abcd::/32"
+      pools: 
+        - pool: "2020:abcd::1-2020:abcd::ffff"
+      rapid-commit: true
+      interface: wfan0
+      reservations:
+        - hw-address: 00124b0029bd7e45
+          ip-addresses: 
+            - "2020:abcd::1111"
   loggers:
     - name: kea-dhcp6
       output-options:
-        - output: /usr/local/var/log/kea-dhcp6.log
+        - output: /app/kea-dhcp6.log
       severity: INFO
       debuglevel: 0
