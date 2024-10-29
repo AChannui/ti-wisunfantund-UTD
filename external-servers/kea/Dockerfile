@@ -27,3 +27,4 @@ RUN mkdir -p /app
 
 COPY kea-conf.json /app/kea-conf.json
 
+COPY test.sh /app/test.sh

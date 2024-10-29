@@ -48,3 +48,8 @@ Dhcp6:
         - output: /app/kea-dhcp6.log
       severity: INFO
       debuglevel: 0
+  hooks-libraries: 
+    - library: /app/lib/kea/hooks/libdhcp_run_script.so
+      parameters:
+        name: /app/test.sh
+        sync: false
