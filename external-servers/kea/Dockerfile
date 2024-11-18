@@ -2,24 +2,51 @@
 FROM ubuntu:22.04
 
 # init package
-RUN apt update && apt install --yes dumb-init 
+RUN true \
+    && apt-get update \
+    && apt-get install --yes \
+        autoconf \
+        build-essential \
+        cmake \
+        dumb-init \
+        git \
+        iproute2 \
+        jq \
+        libboost-system-dev \
+        liblog4cplus-dev \
+        libssl-dev \
+        libtool \
+        python3 \
+        python3-pip \
+    && pip install yq \
+    && mkdir /build /app \
+    && true
 
-RUN mkdir /build /app
-
-RUN apt update && apt install --yes git 
 
 # dhcp server download
 RUN git clone --branch Kea-2.6.1 --depth 1 https://github.com/isc-projects/kea.git /build/kea 
 
 # install dependencies
-RUN apt-get update && apt-get install --yes autoconf libtool build-essential libssl-dev liblog4cplus-dev libboost-system-dev
+RUN true \
+    && cd /build/kea  \
+    && autoreconf --install  \
+    && ./configure --prefix=/app  \
+    && make -j $(nproc)  \
+    && make install  \
+    && ldconfig \
+    && true
 
-RUN cd /build/kea && autoreconf --install && ./configure --prefix=/app && make -j $(nproc) 
-RUN cd /build/kea && make install && ldconfig
+RUN echo a && git clone https://github.com/AChannui/Kea-dhcp-hooks-UTD.git /build/kea-hook
 
-RUN apt update && apt install --yes iproute2
-
-RUN apt-get --yes install python3 jq python3-pip && pip install yq
+RUN true \
+    && cd /build/kea-hook/thirdparty  \
+    && rm -rf kea  \
+    && ln -sfT /build/kea kea \
+    && cd /build/kea-hook  \
+    && bin/compile.sh  \
+    && cd build  \
+    && make install \
+    && true
 
 WORKDIR /app
 
@@ -31,7 +58,3 @@ CMD ["/app/kea-docker-start.sh"]
 COPY kea-docker-start.sh /app/
 
 COPY kea-conf.yml /app/kea-conf.yml
-
-RUN cd /app && yq . < kea-conf.yml > kea-conf.json && echo "yq finished"
-
-COPY test.sh /app/test.sh

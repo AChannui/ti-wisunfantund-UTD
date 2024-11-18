@@ -610,8 +610,8 @@ TunnelIPv6Interface::set_online(bool online)
 	{
 		// kWPANTUNDProperty_IPv6WfantundGlobalAddress;
 		syslog(LOG_INFO, "Trying to add default Global IP address to %s. . .", mInterfaceName.c_str());
-		test_addr = {0x20,0x20,0xAB,0xCD, 0,0,0,0, 0,0,0,0, 0,0,0,0};
-		add_address(&test_addr, 64);
+		test_addr = {0x20,0x20,0xAB,0xCD, 0,0,0,0,0,0,0,0};
+		add_address(&test_addr, 32);
 	}
 	return status;
 }

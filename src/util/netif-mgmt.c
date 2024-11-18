@@ -304,7 +304,7 @@ netif_mgmt_add_ipv6_address(int reqfd, const char* if_name, const uint8_t addr[1
 	require_string(ret >= 0, bail, strerror(errno));
 
 	ifr6.ifr6_ifindex = ret;
-	ifr6.ifr6_prefixlen = 64;
+	ifr6.ifr6_prefixlen = 32;
 
 	ret = ioctl(reqfd, SIOCSIFADDR, &ifr6);
 

@@ -34,22 +34,15 @@ Dhcp6:
   subnet6:
     - id: 1
       subnet: "2020:abcd::/32"
-      pools: 
-        - pool: "2020:abcd::1-2020:abcd::ffff"
+      pools:  
+        - pool: "2020:abcd:0:0:0:0:0:1-2020:abcd:ffff:ffff:ffff:ffff:ffff:ffff"
       rapid-commit: true
       interface: wfan0
-      reservations:
-        - hw-address: 00124b0029bd7e45
-          ip-addresses: 
-            - "2020:abcd::1111"
   loggers:
     - name: kea-dhcp6
       output-options:
-        - output: /app/kea-dhcp6.log
-      severity: INFO
-      debuglevel: 0
+        - output: stdout
+      severity: ERROR
+      debuglevel: 99
   hooks-libraries: 
-    - library: /app/lib/kea/hooks/libdhcp_run_script.so
-      parameters:
-        name: /app/test.sh
-        sync: false
+    - library: /usr/local/lib/kea/hooks/libmac2ipv6.so
